@@ -92,6 +92,8 @@ const char *mkauthor(const struct ident *ident, int cols, enum author author);
 const char *mkmode(mode_t mode);
 const char *mkstatus(const char status, enum status_label label);
 
+int is_stdin_dev_null();
+
 #define author_trim(cols) (cols == 0 || cols > 10)
 
 /*

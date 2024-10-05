@@ -461,4 +461,35 @@ chunk_allocator(void *mem, size_t type_size, size_t chunk_size, size_t size, siz
 	return mem;
 }
 
+int
+is_stdin_dev_null()
+{
+    struct stat stdin_stat, dev_null_stat;
+
+    // Get file status for stdin (file descriptor 0)
+    if (fstat(STDIN_FILENO, &stdin_stat) == -1) {
+        perror("fstat stdin");
+        return -1;
+    }
+
+    // Get file status for /dev/null
+    FILE *dev_null = fopen("/dev/null", "r");
+    if (!dev_null) {
+        perror("fopen /dev/null");
+        return -1;
+    }
+
+    if (fstat(fileno(dev_null), &dev_null_stat) == -1) {
+        perror("fstat /dev/null");
+        fclose(dev_null);
+        return -1;
+    }
+
+    fclose(dev_null);
+
+    // Compare device and inode numbers of stdin and /dev/null
+    return (stdin_stat.st_dev == dev_null_stat.st_dev &&
+            stdin_stat.st_ino == dev_null_stat.st_ino);
+}
+
 /* vim: set ts=8 sw=8 noexpandtab: */

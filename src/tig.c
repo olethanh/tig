@@ -802,7 +802,7 @@ int
 main(int argc, const char *argv[])
 {
 	const char *codeset = ENCODING_UTF8;
-	bool pager_mode = !isatty(STDIN_FILENO);
+	bool pager_mode = !isatty(STDIN_FILENO) && !is_stdin_dev_null();
 	enum request request = parse_options(argc, argv, pager_mode);
 	struct view *view;
 
